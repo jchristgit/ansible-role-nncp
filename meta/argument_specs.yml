@@ -1,0 +1,22 @@
+---
+argument_specs:
+  main:
+    short_description: Deploy nncp-daemon, nncp-caller and the nncp-clean service
+    author: Johannes Christ
+    options:
+      nncp_configuration:
+        required: true
+        type: str
+        description: NNCP configuration. See the [official documentation](https://nncp.mirrors.quux.org/Configuration.html) for guidance. The `nncp-cfgnew` command will generate a default configuration file for you.
+      nncp_cleanup_older_than:
+        type: str
+        description: Clean up `part`, `seen`, `hdr` and `area` spool files that are older than the specified time.
+        default: 30d
+      nncp_cleanup_tmp_older_than:
+        type: str
+        description: Clean up `tmp` spool files that are older than the specified time.
+        default: 30d
+      nncp_cleanup_schedule:
+        type: str
+        description: How often to run the `nncp-clean` service to perform the cleanups above. You can test your time specifications with `systemd-analyze calendar`.
+        default: weekly
