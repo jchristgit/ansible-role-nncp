@@ -1,0 +1,11 @@
+# Ansible managed
+[Unit]
+Description = Clean up nncp spool regular
+
+[Timer]
+OnCalendar = {{ nncp_cleanup_schedule }}
+
+[Install]
+WantedBy = network-online.target
+
+# vim: ft=dosini.jinja2:

@@ -1,0 +1,58 @@
+[Unit]
+Description = Clean up old packets in the NNCP spool
+ConditionPathExists = %S/nncp/tmp
+
+[Service]
+Type = oneshot
+{% for type in ("part", "seen", "hdr", "area") %}
+ExecStart = /usr/bin/nncp-rm -quiet -all -older {{ nncp_cleanup_older_than }} -{{ type }}
+{% endfor %}
+ExecStart = /usr/bin/nncp-rm -quiet -tmp -older {{ nncp_cleanup_tmp_older_than }}
+User = nncp
+Group = nncp
+
+# Resources
+LogsDirectory = nncp
+StateDirectory = nncp
+BindReadOnlyPaths = {{ nncp_configuration_destination }}
+
+# Resource usage
+MemoryHigh = 48M
+MemoryMax = 50M
+CPUQuota = 10%
+Nice = 10
+
+# Sandboxing
+CapabilityBoundingSet =
+DeviceAllow =
+DevicePolicy = closed
+IPAddressDeny = any
+LockPersonality = true
+MemoryDenyWriteExecute = true
+NoNewPrivileges = true
+PrivateDevices = true
+PrivateTmp = true
+PrivateUsers = true
+# Needed for reading /proc/cpuinfo
+ProcSubset = all
+ProtectClock = true
+ProtectControlGroups = true
+ProtectHome = true
+ProtectHostname = true
+ProtectKernelLogs = true
+ProtectKernelModules = true
+ProtectKernelTunables = true
+ProtectProc = noaccess
+ProtectSystem = full
+RemoveIPC = true
+# Multicast
+# RestrictAddressFamilies = AF_INET AF_INET6
+RestrictNamespaces = true
+RestrictRealtime = true
+RestrictSUIDSGID = true
+SystemCallArchitectures = native
+SystemCallFilter = @system-service
+SystemCallFilter = ~@privileged @resources
+UMask = 0077
+
+# vim: ft=dosini.jinja2:

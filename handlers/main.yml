@@ -1,0 +1,21 @@
+---
+- name: restart nncp-daemon
+  service:
+    name: nncp-daemon.service
+    state: restarted
+  tags:
+    - role::nncp
+
+- name: restart nncp-clean
+  service:
+    name: nncp-clean.timer
+    state: restarted
+  tags:
+    - role::nncp
+
+- name: restart nncp-caller
+  service:
+    name: nncp-caller.service
+    state: restarted
+  tags:
+    - role::nncp

@@ -1,0 +1,9 @@
+# Ansible managed
+/var/log/nncp/*.log {
+    daily
+    rotate 7
+    missingok
+    compress
+    delaycompress
+    su nncp nncp
+}

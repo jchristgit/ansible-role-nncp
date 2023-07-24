@@ -1,0 +1,66 @@
+# Ansible managed
+
+[Unit]
+Description = Main NNCP caller
+After = network-online.target
+Wants = network-online.target
+
+[Service]
+ExecStart = /usr/bin/nncp-caller -log %L/nncp/caller.log -noprogress
+Restart = on-failure
+User = nncp
+Group = nncp
+
+# Resources
+LogsDirectory = nncp
+StateDirectory = nncp
+BindReadOnlyPaths = {{ nncp_configuration_destination }}
+
+# Resource usage
+MemoryLow = 10M
+MemoryHigh = 180M
+MemoryMax = 200M
+CPUQuota = 25%
+Nice = 2
+
+# Sandboxing
+CapabilityBoundingSet =
+DeviceAllow =
+DevicePolicy = closed
+IPAddressDeny = localhost
+IPAddressDeny = link-local
+# May be needed depending on configuration
+# IPAddressDeny = multicast
+LockPersonality = true
+MemoryDenyWriteExecute = true
+NoNewPrivileges = true
+PrivateDevices = true
+PrivateTmp = true
+# Needed for proper LogsDirectory setup ("is a directory")
+PrivateUsers = false
+# Needed for reading /proc/cpuinfo
+ProcSubset = all
+ProtectClock = true
+ProtectControlGroups = true
+ProtectHome = true
+ProtectHostname = true
+ProtectKernelLogs = true
+ProtectKernelModules = true
+ProtectKernelTunables = true
+ProtectProc = noaccess
+ProtectSystem = full
+RemoveIPC = true
+# The other socket families are needed for standard traffic and multicast
+RestrictAddressFamilies = ~ AF_UNIX
+RestrictNamespaces = true
+RestrictRealtime = true
+RestrictSUIDSGID = true
+SystemCallArchitectures = native
+SystemCallFilter = @system-service
+SystemCallFilter = ~@privileged
+UMask = 0077
+
+[Install]
+WantedBy = network-online.target
+
+# vim: ft=dosini.jinja2:

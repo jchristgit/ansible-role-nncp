@@ -1,0 +1,87 @@
+---
+- name: install nncp
+  package:
+    name: nncp
+    state: present
+  tags:
+    - role::nncp
+
+- name: create nncp configuration
+  copy:
+    content: "{{ nncp_configuration }}"
+    dest: "{{ nncp_configuration_destination }}"
+    owner: nncp
+    group: nncp
+    mode: 0400
+  tags:
+    - role::nncp
+  notify:
+    - restart nncp-caller
+    - restart nncp-daemon
+
+- name: template nncp daemon unit
+  template:
+    src: nncp-daemon.service.j2
+    dest: /etc/systemd/system/nncp-daemon.service
+    owner: root
+    group: root
+    mode: 0444
+  register: nncp_daemon_unit
+  loop:
+    - nncp-daemon.service
+  notify:
+    - restart nncp-daemon
+  tags:
+    - role::nncp
+
+- name: template nncp caller unit
+  template:
+    src: nncp-caller.service.j2
+    dest: /etc/systemd/system/nncp-caller.service
+    owner: root
+    group: root
+    mode: 0444
+  register: nncp_caller_unit
+  notify:
+    - restart nncp-caller
+  tags:
+    - role::nncp
+
+- name: template nncp cleanup units
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/systemd/system/{{ item }}
+    owner: root
+    group: root
+    mode: 0444
+  register: nncp_clean_unit
+  loop:
+    - nncp-clean.service
+    - nncp-clean.timer
+  notify:
+    - restart nncp-clean
+  tags:
+    - role::nncp
+
+- name: copy logrotate configuration
+  template:
+    src: logrotate-nncp.j2
+    dest: /etc/logrotate.d/nncp
+    owner: root
+    group: root
+    mode: 0444
+  tags:
+    - role::nncp
+
+- name: start and enable units
+  service:
+    daemon_reload: "{{ (nncp_clean_unit is changed) or (nncp_daemon_unit is changed) or (nncp_caller_unit is changed) }}"
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - nncp-clean.timer
+    - nncp-daemon.service
+    - nncp-caller.service
+  tags:
+    - role::nncp
