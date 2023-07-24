@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  role_name: nncp
+  author: jchristgit
+  description: Installs NNCP to Debian-based systems
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+  galaxy_tags:
+    - nncp
+    - debian
+dependencies: []
