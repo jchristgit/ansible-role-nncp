@@ -1,12 +1,10 @@
 # Ansible managed
 
 [Unit]
-Description = Main NNCP daemon
-After = network-online.target
-Wants = network-online.target
+Description = NNCP packet processor
 
 [Service]
-ExecStart = /usr/bin/nncp-daemon -log %L/nncp/daemon.log -noprogress
+ExecStart = /usr/bin/nncp-toss -log %L/nncp/toss.log -noprogress -seen -cycle {{ nncp_toss_interval_seconds }}
 Restart = on-failure
 User = nncp
 Group = nncp
@@ -29,8 +27,7 @@ DeviceAllow =
 DevicePolicy = closed
 IPAddressDeny = localhost
 IPAddressDeny = link-local
-# May be needed depending on configuration
-# IPAddressDeny = multicast
+IPAddressDeny = multicast
 LockPersonality = true
 MemoryDenyWriteExecute = true
 NoNewPrivileges = true
@@ -60,8 +57,7 @@ SystemCallFilter = @system-service
 SystemCallFilter = ~@privileged
 UMask = 0077
 
-
 [Install]
-WantedBy = network-online.target
+WantedBy = multi-user.target
 
 # vim: ft=dosini.jinja2:

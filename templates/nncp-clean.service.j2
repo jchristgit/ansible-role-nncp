@@ -1,5 +1,6 @@
 [Unit]
 Description = Clean up old packets in the NNCP spool
+# Without the following the cleanup may crash
 ConditionPathExists = %S/nncp/tmp
 
 [Service]

@@ -47,6 +47,19 @@
   tags:
     - role::nncp
 
+- name: template nncp toss unit
+  template:
+    src: nncp-toss.service.j2
+    dest: /etc/systemd/system/nncp-toss.service
+    owner: root
+    group: root
+    mode: 0444
+  register: nncp_toss_unit
+  notify:
+    - restart nncp-toss
+  tags:
+    - role::nncp
+
 - name: template nncp cleanup units
   template:
     src: "{{ item }}.j2"
@@ -75,13 +88,14 @@
 
 - name: start and enable units
   service:
-    daemon_reload: "{{ (nncp_clean_unit is changed) or (nncp_daemon_unit is changed) or (nncp_caller_unit is changed) }}"
+    daemon_reload: "{{ (nncp_clean_unit is changed) or (nncp_daemon_unit is changed) or (nncp_caller_unit is changed) or (nncp_toss_unit is changed) }}"
     name: "{{ item }}"
     state: started
     enabled: true
   loop:
     - nncp-clean.timer
     - nncp-daemon.service
+    - nncp-toss.service
     - nncp-caller.service
   tags:
     - role::nncp
