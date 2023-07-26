@@ -109,9 +109,10 @@
     state: started
     enabled: true
   loop:
+    - nncp-caller.service
     - nncp-clean.timer
     - nncp-daemon.service
+    - nncp-reass.timer
     - nncp-toss.service
-    - nncp-caller.service
   tags:
     - role::nncp
