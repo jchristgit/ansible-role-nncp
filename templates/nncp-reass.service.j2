@@ -1,0 +1,55 @@
+# Ansible managed
+
+[Unit]
+Description = Reassemble chunked NNCP packets
+
+[Service]
+Type = oneshot
+ExecStart = /usr/bin/nncp-reass -log %L/nncp/reass.log -noprogress -all
+User = nncp
+Group = nncp
+
+# Resources
+LogsDirectory = nncp
+StateDirectory = nncp
+BindReadOnlyPaths = {{ nncp_configuration_destination }}
+
+# Resource usage
+MemoryLow = 10M
+MemoryHigh = 48M
+MemoryMax = 50M
+CPUQuota = 10%
+Nice = 10
+
+# Sandboxing
+CapabilityBoundingSet =
+DeviceAllow =
+DevicePolicy = closed
+IPAddressDeny = any
+LockPersonality = true
+MemoryDenyWriteExecute = true
+NoNewPrivileges = true
+PrivateDevices = true
+PrivateTmp = true
+PrivateUsers = true
+ProcSubset = pid
+ProtectClock = true
+ProtectControlGroups = true
+ProtectHome = true
+ProtectHostname = true
+ProtectKernelLogs = true
+ProtectKernelModules = true
+ProtectKernelTunables = true
+ProtectProc = noaccess
+ProtectSystem = full
+RemoveIPC = true
+RestrictAddressFamilies =
+RestrictNamespaces = true
+RestrictRealtime = true
+RestrictSUIDSGID = true
+SystemCallArchitectures = native
+SystemCallFilter = @system-service
+SystemCallFilter = ~@privileged @resources
+UMask = 0077
+
+# vim: ft=dosini.jinja2:

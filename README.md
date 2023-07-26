@@ -38,9 +38,12 @@ Extensive use of sandboxing via unit file options is made.
 - `nncp_cleanup_schedule` (string): How often to run the `nncp-clean` service to
   perform the cleanups above. You can test your time specifications with
   `systemd-analyze calendar`. Defaults to `weekly`.
+- `nncp_reass_schedule` (string): How often to run `nncp-reass` to reassemble
+  any chunked packets in the spool. You can test this time specification with
+  `systemd-analyze calendar` as well. Defaults to `hourly`.
 - `nncp_toss_interval_seconds` (integer): How often, in seconds, to run
-  `nncp-toss`. Corresponds to the `nncp-toss` `-cycle` option. Defaults to
-  `300` (5 minutes).
+  `nncp-toss`. Corresponds to the `nncp-toss` `-cycle` option. Defaults to `300`
+  (5 minutes).
 
 
 ## Credits

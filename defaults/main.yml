@@ -3,4 +3,6 @@ nncp_cleanup_older_than: 30d
 nncp_cleanup_tmp_older_than: 30d
 nncp_cleanup_schedule: weekly
 
+nncp_reass_schedule: hourly
+
 nncp_toss_interval_seconds: 300

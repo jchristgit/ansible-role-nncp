@@ -13,6 +13,13 @@
   tags:
     - role::nncp
 
+- name: restart nncp-reass
+  service:
+    name: nncp-reass.timer
+    state: restarted
+  tags:
+    - role::nncp
+
 - name: restart nncp-caller
   service:
     name: nncp-caller.service

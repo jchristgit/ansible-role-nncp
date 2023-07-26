@@ -1,0 +1,12 @@
+# Ansible managed
+
+[Unit]
+Description = Reassemble chunked NNCP packets hourly
+
+[Timer]
+OnCalendar = {{ nncp_reass_schedule }}
+
+[Install]
+WantedBy = timers.target
+
+# vim: ft=dosini.jinja2:
