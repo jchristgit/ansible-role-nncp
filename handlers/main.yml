@@ -5,6 +5,7 @@
     state: restarted
   tags:
     - role::nncp
+  when: nncp_daemon_enabled
 
 - name: restart nncp-clean
   service:
