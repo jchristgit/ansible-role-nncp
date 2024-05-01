@@ -1,13 +1,13 @@
 ---
-- name: install nncp
-  package:
+- name: Install nncp
+  ansible.builtin.package:
     name: nncp
     state: present
   tags:
     - role::nncp
 
-- name: create nncp configuration
-  copy:
+- name: Create nncp configuration
+  ansible.builtin.copy:
     content: "{{ nncp_configuration }}"
     dest: "{{ nncp_configuration_destination }}"
     owner: nncp
@@ -16,93 +16,93 @@
   tags:
     - role::nncp
   notify:
-    - restart nncp-caller
-    - restart nncp-daemon
+    - Restart nncp-caller
+    - Restart nncp-daemon
 
-- name: template nncp daemon unit
-  template:
+- name: Template nncp daemon unit
+  ansible.builtin.template:
     src: nncp-daemon.service.j2
     dest: /etc/systemd/system/nncp-daemon.service
     owner: root
     group: root
-    mode: 0444
+    mode: "0444"
   register: nncp_daemon_unit
   notify:
-    - restart nncp-daemon
+    - Restart nncp-daemon
   when: nncp_daemon_enabled
   tags:
     - role::nncp
 
-- name: template nncp caller unit
-  template:
+- name: Template nncp caller unit
+  ansible.builtin.template:
     src: nncp-caller.service.j2
     dest: /etc/systemd/system/nncp-caller.service
     owner: root
     group: root
-    mode: 0444
+    mode: "0444"
   register: nncp_caller_unit
   notify:
-    - restart nncp-caller
+    - Restart nncp-caller
   tags:
     - role::nncp
 
-- name: template nncp toss unit
-  template:
+- name: Template nncp toss unit
+  ansible.builtin.template:
     src: nncp-toss.service.j2
     dest: /etc/systemd/system/nncp-toss.service
     owner: root
     group: root
-    mode: 0444
+    mode: "0444"
   register: nncp_toss_unit
   notify:
-    - restart nncp-toss
+    - Restart nncp-toss
   tags:
     - role::nncp
 
-- name: template nncp cleanup units
-  template:
+- name: Template nncp cleanup units
+  ansible.builtin.template:
     src: "{{ item }}.j2"
     dest: /etc/systemd/system/{{ item }}
     owner: root
     group: root
-    mode: 0444
+    mode: "0444"
   register: nncp_clean_unit
   loop:
     - nncp-clean.service
     - nncp-clean.timer
   notify:
-    - restart nncp-clean
+    - Restart nncp-clean
   tags:
     - role::nncp
 
-- name: template nncp reass units
-  template:
+- name: Template nncp reass units
+  ansible.builtin.template:
     src: "{{ item }}.j2"
     dest: /etc/systemd/system/{{ item }}
     owner: root
     group: root
-    mode: 0444
+    mode: "0444"
   register: nncp_reass_unit
   loop:
     - nncp-reass.service
     - nncp-reass.timer
   notify:
-    - restart nncp-reass
+    - Restart nncp-reass
   tags:
     - role::nncp
 
-- name: copy logrotate configuration
-  template:
+- name: Copy logrotate configuration
+  ansible.builtin.template:
     src: logrotate-nncp.j2
     dest: /etc/logrotate.d/nncp
     owner: root
     group: root
-    mode: 0444
+    mode: "0444"
   tags:
     - role::nncp
 
-- name: start and enable units
-  service:
+- name: Start and enable units
+  ansible.builtin.service:
     daemon_reload: "{{ (nncp_clean_unit is changed) or (nncp_daemon_unit is changed) or (nncp_caller_unit is changed) or (nncp_toss_unit is changed) or (nncp_reass_unit is changed) }}"
     name: "{{ item }}"
     state: "{{ (item == 'nncp-daemon.service') | ternary('started', (nncp_daemon_enabled | ternary('started', 'stopped'))) }}"

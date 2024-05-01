@@ -1,35 +1,35 @@
 ---
-- name: restart nncp-daemon
-  service:
+- name: Restart nncp-daemon
+  ansible.builtin.service:
     name: nncp-daemon.service
     state: restarted
   tags:
     - role::nncp
   when: nncp_daemon_enabled
 
-- name: restart nncp-clean
-  service:
+- name: Restart nncp-clean
+  ansible.builtin.service:
     name: nncp-clean.timer
     state: restarted
   tags:
     - role::nncp
 
-- name: restart nncp-reass
-  service:
+- name: Restart nncp-reass
+  ansible.builtin.service:
     name: nncp-reass.timer
     state: restarted
   tags:
     - role::nncp
 
-- name: restart nncp-caller
-  service:
+- name: Restart nncp-caller
+  ansible.builtin.service:
     name: nncp-caller.service
     state: restarted
   tags:
     - role::nncp
 
-- name: restart nncp-toss
-  service:
+- name: Restart nncp-toss
+  ansible.builtin.service:
     name: nncp-toss.service
     state: restarted
   tags:
