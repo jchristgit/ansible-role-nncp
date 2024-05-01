@@ -27,10 +27,9 @@
     group: root
     mode: 0444
   register: nncp_daemon_unit
-  loop:
-    - nncp-daemon.service
   notify:
     - restart nncp-daemon
+  when: nncp_daemon_enabled
   tags:
     - role::nncp
 
@@ -106,8 +105,8 @@
   service:
     daemon_reload: "{{ (nncp_clean_unit is changed) or (nncp_daemon_unit is changed) or (nncp_caller_unit is changed) or (nncp_toss_unit is changed) or (nncp_reass_unit is changed) }}"
     name: "{{ item }}"
-    state: started
-    enabled: true
+    state: "{{ (item == 'nncp-daemon.service') | ternary('started', (nncp_daemon_enabled | ternary('started', 'stopped'))) }}"
+    enabled: "{{ item != 'nncp-daemon.service' or nncp_daemon_enabled }}"
   loop:
     - nncp-caller.service
     - nncp-clean.timer

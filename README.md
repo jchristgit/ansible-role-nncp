@@ -44,6 +44,9 @@ Extensive use of sandboxing via unit file options is made.
 - `nncp_toss_interval_seconds` (integer): How often, in seconds, to run
   `nncp-toss`. Corresponds to the `nncp-toss` `-cycle` option. Defaults to `300`
   (5 minutes).
+- `nncp_daemon_enabled` (bool): Whether to enable the `nncp-daemon.service`
+  unit that will listen to inbound connections and process packets coming in.
+  Defaults to `true`.
 
 
 ## Credits
